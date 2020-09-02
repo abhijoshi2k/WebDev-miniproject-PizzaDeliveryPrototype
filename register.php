@@ -60,6 +60,8 @@ if(!loggedin())
 										$query = "INSERT INTO users VALUES ('"."','".mysqli_real_escape_string($connect,$username)."','".mysqli_real_escape_string($connect,$password_hash)."','".mysqli_real_escape_string($connect,$firstname)."','".mysqli_real_escape_string($connect,$surname)."','".mysqli_real_escape_string($connect,$contact_hash)."','".mysqli_real_escape_string($connect,$sec_qt)."','".mysqli_real_escape_string($connect,$sec_hash)."')";
 										if($query_run = mysqli_query($connect,$query))
 										{
+											$insert_id = mysqli_insert_id($connect);
+											$_SESSION['user_id'] = $insert_id;
 											header('Location: register_success.php');
 										}
 										else
