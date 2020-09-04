@@ -60,7 +60,7 @@ if(loggedin() && isset($_POST['address']) && isset($_POST['contact']) && !empty(
 	$_SESSION['insert_id'] = $insert_id;
 	$_SESSION['ts'] = $time;
 	$_SESSION['number_of_items'] = $number_of_items;
-	$_SESSION['name'] = implode(" ", $name);
+	$_SESSION['name'] = implode("_", $name);
 	$_SESSION['quantity'] = $quantity_str;
 	$_SESSION['price'] = implode(" ", $price);
 	$_SESSION['item_total'] = implode(" ", $item_total);
@@ -73,7 +73,7 @@ if(loggedin() && isset($_POST['address']) && isset($_POST['contact']) && !empty(
 
 else if(isset($_SESSION['insert_id'],$_SESSION['ts'],$_SESSION['number_of_items'],$_SESSION['name'],$_SESSION['quantity'],$_SESSION['price'],$_SESSION['item_total'],$_SESSION['tot'],$_SESSION['address'],$_SESSION['contact']))
 {
-	$name = explode(" ", $_SESSION['name']);
+	$name = explode("_", $_SESSION['name']);
 	$quantity = explode(" ", $_SESSION['quantity']);
 	$price = explode(" ", $_SESSION['price']);
 	$item_total = explode(" ", $_SESSION['item_total']);

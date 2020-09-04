@@ -28,18 +28,32 @@ if(loggedin())
 
 	?>
 
-	Refreshing in <b><span id="timer">40</span></b> seconds! <a href="javascript: void(0)" onclick="location.reload();">Refresh Now</a><br><br>
-
 	<script type="text/javascript">
-		let count = 39;
 		setInterval(function() {
-			document.getElementById('timer').innerHTML = count;
-			count--;
-			if(count<0)
-			{
-				location.reload();
-			}
-		}, 1000);
+
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		    	if (this.readyState == 4 && this.status == 200) {
+		    		document.getElementById("table").innerHTML = this.responseText;
+		      	}
+		    };
+		    xmlhttp.open("GET","getorders.php?req=3",true);
+		    xmlhttp.send();
+
+		}, 10000);
+
+		setInterval(function() {
+
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		    	if (this.readyState == 4 && this.status == 200) {
+		    		document.getElementById("id_list").innerHTML = this.responseText;
+		      	}
+		    };
+		    xmlhttp.open("GET","getorders.php?req=4",true);
+		    xmlhttp.send();
+
+		}, 10000);
 	</script>
 
 	<form action="order_edit.php" autocomplete="off" method="POST">
@@ -76,7 +90,7 @@ if(loggedin())
 	</form>
 	<p><a href="employee_orders.php">View active orders</a></p>
 
-	<table cellspacing="5">
+	<table cellspacing="5" id="table">
 		<tr>
 			<th>Order #</th>
 			<th>Username</th>
@@ -90,7 +104,7 @@ if(loggedin())
 
 		<?php
 
-		$query = "SELECT orders.order_id, users.username, orders.order_list, orders.order_quantity, orders.order_total, orders.address, orders.contact, orders.status, orders.order_time FROM orders LEFT JOIN users ON orders.user_id = users.id WHERE 1 ORDER BY orders.order_id";
+		$query = "SELECT orders.order_id, users.username, orders.order_list, orders.order_quantity, orders.order_total, orders.address, orders.contact, orders.status, orders.order_time FROM orders LEFT JOIN users ON orders.user_id = users.id WHERE 1 ORDER BY orders.order_id DESC";
 		$query_run = mysqli_query($connect,$query);
 
 		while($row = mysqli_fetch_assoc($query_run))

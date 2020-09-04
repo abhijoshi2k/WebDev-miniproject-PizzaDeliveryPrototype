@@ -28,18 +28,39 @@ if(loggedin())
 
 	?>
 
-	Refreshing in <b><span id="timer">40</span></b> seconds! <a href="javascript: void(0)" onclick="location.reload();">Refresh Now</a><br><br>
-
 	<script type="text/javascript">
-		let count = 39;
 		setInterval(function() {
-			document.getElementById('timer').innerHTML = count;
-			count--;
-			if(count<0)
-			{
-				location.reload();
-			}
-		}, 1000);
+
+			setTimeout(function() {
+				for(var i=0; i<document.getElementsByClassName('sub-btn').length; i++)
+				{
+					document.getElementsByClassName('sub-btn')[i].setAttribute('disabled', '');
+				}
+			}, 8500);
+
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		    	if (this.readyState == 4 && this.status == 200) {
+		    		document.getElementById("table").innerHTML = this.responseText;
+		      	}
+		    };
+		    xmlhttp.open("GET","getorders.php?req=1",true);
+		    xmlhttp.send();
+
+		}, 10000);
+
+		setInterval(function() {
+
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		    	if (this.readyState == 4 && this.status == 200) {
+		    		document.getElementById("id_list").innerHTML = this.responseText;
+		      	}
+		    };
+		    xmlhttp.open("GET","getorders.php?req=2",true);
+		    xmlhttp.send();
+
+		}, 10000);
 	</script>
 
 	<form action="order_edit.php" autocomplete="off" method="POST">
@@ -76,7 +97,7 @@ if(loggedin())
 	</form>
 	<p><a href="employee_all_orders.php">View all orders</a></p>
 
-	<table cellspacing="5">
+	<table cellspacing="5" id="table">
 		<tr>
 			<th>Order #</th>
 			<th>Username</th>
@@ -91,7 +112,7 @@ if(loggedin())
 
 		<?php
 
-		$query = "SELECT orders.order_id, users.username, orders.order_list, orders.order_quantity, orders.order_total, orders.address, orders.contact, orders.status, orders.order_time FROM orders LEFT JOIN users ON orders.user_id = users.id WHERE orders.status != 4 AND orders.status != 6 ORDER BY orders.order_id";
+		$query = "SELECT orders.order_id, users.username, orders.order_list, orders.order_quantity, orders.order_total, orders.address, orders.contact, orders.status, orders.order_time FROM orders LEFT JOIN users ON orders.user_id = users.id WHERE orders.status != 4 AND orders.status != 6 ORDER BY orders.order_id DESC";
 		$query_run = mysqli_query($connect,$query);
 
 		while($row = mysqli_fetch_assoc($query_run))
@@ -159,7 +180,14 @@ if(loggedin())
 				<td><?php echo $row['contact']; ?></td>
 				<td><b><?php echo $status ?></b></td>
 				<td><?php echo $row['order_time']; ?></td>
-				<td><input type="submit" form="<?php echo $row['order_id']; ?>" value="Next Status"></td>
+				<td>
+					<form action="order_edit.php" method="POST" id="<?php echo $row['order_id']; ?>">
+						<input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+						<input type="hidden" name="status" value="<?php echo ((int)$row['status'] + 1); ?>">
+						<input class="sub-btn" type="submit" value="Next Status">
+					</form>
+					
+				</td>
 			</tr>
 
 			<?php
@@ -167,6 +195,15 @@ if(loggedin())
 
 		?>
 	</table>
+
+	<script type="text/javascript">
+		setTimeout(function() {
+			for(var i=0; i<document.getElementsByClassName('sub-btn').length; i++)
+			{
+				document.getElementsByClassName('sub-btn')[i].setAttribute('disabled', '');
+			}
+		}, 8500);
+	</script>
 
 	<?php
 }
