@@ -7,6 +7,7 @@ if(loggedin())
 {
 	if(isset($_POST['order']))
 	{
+		$_SESSION['order_id'] = $_POST['order'];
 		$query = "SELECT user_id FROM `orders` WHERE order_id=".$_POST['order'];
 		$query_run = mysqli_query($connect,$query);
 
@@ -72,8 +73,8 @@ if(loggedin())
 
 				?><b>Order ID: </b><?php echo $_POST['order'];
 				?><br>
-				<b>Order Status: </b><?php echo $status;
-				?><br>
+				<b>Order Status: </b><span id="status"><?php echo $status;
+				?></span><br>
 				<b>Order received at: </b><?php echo $row['order_time'];
 				?><br><br><?php
 
@@ -119,11 +120,38 @@ if(loggedin())
 
 					<form action="order_cancel.php" id="<?php echo $_POST['order'].'_c'; ?>" method="POST" onsubmit="return confirm('Are you sure you want to cancel your order?');">
 						<input type="hidden" name="order" value="<?php echo $_POST['order']; ?>">
-						<input type="submit" value="Cancel Order" form="<?php echo $_POST['order'].'_c'; ?>">
+						<input type="submit" id="sub-btn" value="Cancel Order" form="<?php echo $_POST['order'].'_c'; ?>">
 					</form>
 
 					<?php
 				}
+
+				?>
+
+				<script type="text/javascript">
+					setInterval(function() {
+
+						var xmlhttp = new XMLHttpRequest();
+					    xmlhttp.onreadystatechange = function() {
+					    	if (this.readyState == 4 && this.status == 200) {
+					    		document.getElementById("status").innerHTML = this.responseText;
+					    		if(document.getElementById("status").innerHTML == 'Order Received')
+					    		{
+					    			document.getElementById('sub-btn').removeAttribute('disabled');
+					    		}
+					    		else
+					    		{
+					    			document.getElementById('sub-btn').setAttribute('disabled', '');
+					    		}
+					      	}
+					    };
+					    xmlhttp.open("GET","update_orders.php?req=2",true);
+					    xmlhttp.send();
+
+					}, 10000);
+				</script>
+
+				<?php
 			}
 		}
 		else

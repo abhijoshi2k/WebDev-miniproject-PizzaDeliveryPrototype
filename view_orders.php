@@ -11,7 +11,7 @@ if(loggedin())
 	?>
 
 	<h1>All Orders</h1>
-	<ol type="1">
+	<ol type="1" id="orders">
 		<?php
 
 		while($row = mysqli_fetch_assoc($query_run))
@@ -48,22 +48,10 @@ if(loggedin())
 				<b>Bill Amount: </b>₹<?php echo $row['order_total']; ?> | 
 				<b>Order Time: </b><?php echo $row['order_time']; ?>
 				<br><br>
-				<input type="submit" value="Order Details" form="<?php echo $row['order_id']; ?>">
-
-				<?php
-
-				if($status == 'Order Received')
-				{
-					?><input type="submit" value="Cancel Order" form="<?php echo $row['order_id'].'_c'; ?>"><?php
-				}
-
-				?>
 				
-
-
-				<form action="order_details.php" id="<?php echo $row['order_id']; ?>" method="POST">
+				<form style="display: inline-block;" action="order_details.php" id="<?php echo $row['order_id']; ?>" method="POST">
 					<input type="hidden" name="order" value="<?php echo $row['order_id']; ?>">
-					
+					<input type="submit" value="Order Details" form="<?php echo $row['order_id']; ?>">
 				</form>
 
 				<?php
@@ -71,9 +59,9 @@ if(loggedin())
 				if($status == 'Order Received')
 				{
 					?>
-					<form action="order_cancel.php" id="<?php echo $row['order_id'].'_c'; ?>" method="POST" onsubmit="return confirm('Are you sure you want to cancel your order?');">
+					<form style="display: inline-block;" action="order_cancel.php" id="<?php echo $row['order_id'].'_c'; ?>" method="POST" onsubmit="return confirm('Are you sure you want to cancel your order?');">
 						<input type="hidden" name="order" value="<?php echo $row['order_id']; ?>">
-						
+						<input type="submit" value="Cancel Order">
 					</form>
 					<?php
 				}
@@ -88,6 +76,21 @@ if(loggedin())
 
 		?>
 	</ol>
+
+	<script type="text/javascript">
+		setInterval(function() {
+
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		    	if (this.readyState == 4 && this.status == 200) {
+		    		document.getElementById("orders").innerHTML = this.responseText;
+		      	}
+		    };
+		    xmlhttp.open("GET","update_orders.php?req=1",true);
+		    xmlhttp.send();
+
+		}, 10000);
+	</script>
 
 	<?php
 }

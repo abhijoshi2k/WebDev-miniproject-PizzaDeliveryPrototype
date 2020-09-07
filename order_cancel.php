@@ -8,12 +8,23 @@ if(loggedin())
 	if(isset($_POST['order']))
 	{
 		$order_id = $_POST['order'];
-		$query = "SELECT user_id FROM `orders` WHERE order_id=".$order_id;
+		$query = "SELECT user_id, status FROM `orders` WHERE order_id=".$order_id;
 		$query_run = mysqli_query($connect,$query);
 
 		while($row = mysqli_fetch_assoc($query_run))
 		{
 			$user_id = $row['user_id'];
+			$status = $row['status'];
+		}
+		if($status != '0')
+		{
+			?>
+			<script type="text/javascript">
+				alert('The order cannot be cancelled as we have started preparing it!');
+				location.replace('<?php echo $http_referer ?>');
+			</script>
+			<?php
+			die();
 		}
 		if($user_id == $_SESSION['user_id'])
 		{
