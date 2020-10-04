@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2020 at 10:09 PM
+-- Generation Time: Sep 07, 2020 at 09:56 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `pizza`
 --
+CREATE DATABASE IF NOT EXISTS `pizza` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `pizza`;
 
 -- --------------------------------------------------------
 
@@ -40,6 +42,13 @@ CREATE TABLE `employees` (
 -- RELATIONSHIPS FOR TABLE `employees`:
 --
 
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`id`, `username`, `password`, `firstname`, `surname`, `contact`) VALUES
+(1, 'abhijoshi2k', '32250170a0dca92d53ec9624f336ca24', 'Abhishek', 'Joshi', '9757468857');
+
 -- --------------------------------------------------------
 
 --
@@ -56,6 +65,16 @@ CREATE TABLE `menu` (
 --
 -- RELATIONSHIPS FOR TABLE `menu`:
 --
+
+--
+-- Dumping data for table `menu`
+--
+
+INSERT INTO `menu` (`id`, `item`, `cost`, `included`) VALUES
+(3, 'Cheese Pizza', 250, 1),
+(4, '5 Pepper', 350, 1),
+(5, 'Mexican Green Wave', 450, 1),
+(6, 'Chicken Tikka', 500, 0);
 
 -- --------------------------------------------------------
 
@@ -81,6 +100,20 @@ CREATE TABLE `orders` (
 --       `users` -> `id`
 --
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `order_list`, `order_quantity`, `order_total`, `address`, `contact`, `status`, `order_time`) VALUES
+(1, 2, '3 5', '1 1', '700', 'a', '9757468857', 6, '01/09/2020 10:55:36am IST'),
+(2, 2, '4 5', '1 3', '1700', 'a\r\na2\r\na3', '9757468857', 4, '01/09/2020 12:34:23pm IST'),
+(3, 3, '3 5', '1 6', '2950', '9/6 udyan chs\r\nnear ghatkopar depot\r\nghatkopar e\r\nmum75', '8452999719', 4, '03/09/2020 11:09:36am IST'),
+(4, 2, '4 5', '1 1', '800', 'a', '9757468857', 3, '04/09/2020 12:28:25pm IST'),
+(5, 3, '5', '1', '450', 'a\r\naa', '9999999999', 6, '04/09/2020 04:19:30pm IST'),
+(6, 3, '3 5', '1 1', '700', 'z', '9999999999', 0, '04/09/2020 04:22:44pm IST'),
+(7, 3, '3 4 5', '1 1 1', '1050', 'k', '9999999999', 0, '04/09/2020 04:24:10pm IST'),
+(8, 2, '3', '1', '250', 'a\r\nz', '9757468857', 1, '07/09/2020 12:38:27pm IST');
+
 -- --------------------------------------------------------
 
 --
@@ -101,6 +134,14 @@ CREATE TABLE `users` (
 --
 -- RELATIONSHIPS FOR TABLE `users`:
 --
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `firstname`, `surname`, `contact`, `security_question`, `answer`) VALUES
+(2, 'abhi.joshi2k', '32250170a0dca92d53ec9624f336ca24', 'Abhishek', 'Joshi', '9757468857', 'Enter pass123', '32250170a0dca92d53ec9624f336ca24'),
+(3, 'abhi', '32250170a0dca92d53ec9624f336ca24', 'Anj', 'J', '9999999999', 'Enter pass123', '32250170a0dca92d53ec9624f336ca24');
 
 --
 -- Indexes for dumped tables
@@ -142,25 +183,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
