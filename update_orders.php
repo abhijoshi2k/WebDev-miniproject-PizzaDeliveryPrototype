@@ -51,7 +51,7 @@ if(loggedin() && isset($_GET['req']) && $_GET['req'] == '1')
 
 else if(loggedin() && isset($_GET['req']) && $_GET['req'] == '2' && isset($_SESSION['order_id']))
 {
-	$query = "SELECT status FROM `orders` WHERE order_id=".$_SESSION['order_id'];
+	$query = "SELECT status, order_id FROM `orders` WHERE order_id=".$_SESSION['order_id'];
 	$query_run = mysqli_query($connect,$query);
 
 	while($row = mysqli_fetch_assoc($query_run))
@@ -81,8 +81,13 @@ else if(loggedin() && isset($_GET['req']) && $_GET['req'] == '2' && isset($_SESS
 			$status = 'Cancelled';
 		}
 
-		echo $status;
+		$order_detail = new stdClass;
+
+		@$order_detail->id = $row['order_id'];
+		@$order_detail->status = $status;
 	}
+
+	echo json_encode($order_detail);
 }
 
 ?>

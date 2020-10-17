@@ -3,13 +3,10 @@
 require 'core_login.php';
 require 'database_connect.php';
 
-if(loggedin() && isset($_GET['req']) && $_GET['req'] == '1')
+if(loggedin() && isset($_GET['req']) && $_GET['req'] == '2' && isset($_SESSION['order_id']))
 {
-	$query = "SELECT order_id, status FROM `orders` WHERE user_id=".$_SESSION['user_id']." ORDER BY order_id DESC";
-
+	$query = "SELECT status, order_id FROM `orders` WHERE order_id=".$_SESSION['order_id'];
 	$query_run = mysqli_query($connect,$query);
-
-	$list = array();
 
 	while($row = mysqli_fetch_assoc($query_run))
 	{
@@ -42,11 +39,9 @@ if(loggedin() && isset($_GET['req']) && $_GET['req'] == '1')
 
 		@$order_detail->id = $row['order_id'];
 		@$order_detail->status = $status;
-
-		array_push($list, $order_detail);
-
 	}
-	echo json_encode($list);
+
+	echo json_encode($order_detail);
 }
 
 ?>

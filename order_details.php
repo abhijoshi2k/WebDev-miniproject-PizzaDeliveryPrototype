@@ -112,6 +112,8 @@ if(loggedin())
 				<p><b>Address:</b><br><?php echo nl2br("$row[address]"); ?></p>
 				<p><b>Contact: </b><?php echo $row['contact']; ?></p>
 
+				<span id="cancel">
+
 				<?php
 
 				if($status == 'Order Received')
@@ -128,20 +130,27 @@ if(loggedin())
 
 				?>
 
+				</span>
+
 				<script type="text/javascript">
 					setInterval(function() {
 
 						var xmlhttp = new XMLHttpRequest();
 					    xmlhttp.onreadystatechange = function() {
 					    	if (this.readyState == 4 && this.status == 200) {
-					    		document.getElementById("status").innerHTML = this.responseText;
-					    		if(document.getElementById("status").innerHTML == 'Order Received')
+					    		var response = this.responseText;
+
+					    		response = JSON.parse(response);
+
+					    		document.getElementById("status").innerHTML = response.status;
+
+					    		if(response.status == 'Order Received')
 					    		{
-					    			document.getElementById('sub-btn').removeAttribute('disabled');
+					    			document.getElementById('cancel').innerHTML = '<form style="display: inline-block;" action="order_cancel.php" id="' + response.id + '_c' + '" method="POST" onsubmit="return confirm(\'Are you sure you want to cancel your order?\');"><input type="hidden" name="order" value="' + response.id + '"><input type="submit" value="Cancel Order"></form>';
 					    		}
 					    		else
 					    		{
-					    			document.getElementById('sub-btn').setAttribute('disabled', '');
+					    			document.getElementById('cancel').innerHTML = '';
 					    		}
 					      	}
 					    };
