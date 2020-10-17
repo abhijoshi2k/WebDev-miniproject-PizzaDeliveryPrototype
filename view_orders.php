@@ -43,7 +43,7 @@ if(loggedin())
 			?>
 			<li>
 				<b>Order ID: </b><?php echo $row['order_id']; ?> | 
-				<b>Status: </b><?php echo $status; ?>
+				<b>Status: </b><span class="order-status"><?php echo $status; ?></span>
 				<br><br>
 				<b>Bill Amount: </b>₹<?php echo $row['order_total']; ?> | 
 				<b>Order Time: </b><?php echo $row['order_time']; ?>
@@ -53,6 +53,8 @@ if(loggedin())
 					<input type="hidden" name="order" value="<?php echo $row['order_id']; ?>">
 					<input type="submit" value="Order Details" form="<?php echo $row['order_id']; ?>">
 				</form>
+
+				<span class="cancel-span">
 
 				<?php
 
@@ -67,6 +69,8 @@ if(loggedin())
 				}
 
 				?>
+
+				</span>
 				
 				<hr>
 				<br>
@@ -83,7 +87,24 @@ if(loggedin())
 			var xmlhttp = new XMLHttpRequest();
 		    xmlhttp.onreadystatechange = function() {
 		    	if (this.readyState == 4 && this.status == 200) {
-		    		document.getElementById("orders").innerHTML = this.responseText;
+		    		var response = this.responseText;
+		    		response = JSON.parse(response);
+
+		    		var cancel = document.getElementsByClassName('cancel-span');
+		    		var stat = document.getElementsByClassName('order-status');
+
+		    		for(var i=0; i<cancel.length; i++)
+		    		{
+		    			stat[i].innerHTML = response[i].status;
+		    			if(response[i].status == 'Order Received')
+		    			{
+		    				cancel[i].innerHTML = '<form style="display: inline-block;" action="order_cancel.php" id="' + response[i].id + '_c' + '" method="POST" onsubmit="return confirm(\'Are you sure you want to cancel your order?\');"><input type="hidden" name="order" value="' + response[i].id + '"><input type="submit" value="Cancel Order"></form>';
+		    			}
+		    			else
+		    			{
+		    				cancel[i].innerHTML = '';
+		    			}
+		    		}
 		      	}
 		    };
 		    xmlhttp.open("GET","update_orders.php?req=1",true);
